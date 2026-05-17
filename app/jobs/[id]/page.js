@@ -43,6 +43,12 @@ export default function JobDetailPage() {
 
   useEffect(() => {
     async function load() {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        router.push('/admin');
+        return;
+      }
+
       try {
         const data = await api.getJob(id);
         setJob(data.data);
@@ -54,7 +60,7 @@ export default function JobDetailPage() {
       }
     }
     load();
-  }, [id]);
+  }, [id, router]);
 
   async function handleStatusUpdate() {
     if (newStatus === job.status) return;
