@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 
@@ -17,8 +17,10 @@ function validate(fields) {
   return errors;
 }
 
-export default function NewJobPage() {
+export default function EditJobPage() {
   const router = useRouter();
+  const { id } = useParams();
+  
   const [fields, setFields] = useState({
     title: '',
     description: '',
@@ -27,9 +29,38 @@ export default function NewJobPage() {
     contactName: '',
     contactEmail: '',
   });
+  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+
+  useEffect(() => {
+    async function load() {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        router.push('/admin');
+        return;
+      }
+
+      try {
+        const data = await api.getJob(id);
+        const job = data.data;
+        setFields({
+          title: job.title || '',
+          description: job.description || '',
+          category: job.category || 'Plumbing',
+          location: job.location || '',
+          contactName: job.contactName || '',
+          contactEmail: job.contactEmail || '',
+        });
+      } catch (e) {
+        setServerError('Failed to load service details.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [id, router]);
 
   function handleChange(e) {
     setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -44,23 +75,25 @@ export default function NewJobPage() {
     setSubmitting(true);
     setServerError('');
     try {
-      const res = await api.createJob(fields);
-      router.push(`/jobs/${res.data._id}`);
+      await api.updateJob(id, fields);
+      router.push(`/jobs/${id}`);
     } catch (err) {
-      setServerError(err.message || 'Failed to create service request. Please try again.');
+      setServerError(err.message || 'Failed to update service request. Please try again.');
       setSubmitting(false);
     }
   }
 
+  if (loading) return <main className="page"><div className="spinner" /></main>;
+
   return (
     <main className="page">
-      <Link href="/" className="back-link">
-        ← Back to listings
+      <Link href={`/jobs/${id}`} className="back-link">
+        ← Back to service details
       </Link>
 
       <div className="page-header">
-        <h1 className="page-title">Post a Service Request</h1>
-        <p className="page-sub">Describe what you need and tradespeople will get in touch</p>
+        <h1 className="page-title">Edit Service Request</h1>
+        <p className="page-sub">Update the details of this service request</p>
       </div>
 
       <div className="form-card">
@@ -112,7 +145,7 @@ export default function NewJobPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Your Name</label>
+              <label className="form-label">Contact Name</label>
               <input
                 className="input"
                 name="contactName"
@@ -142,9 +175,9 @@ export default function NewJobPage() {
 
           <div className="form-actions">
             <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting ? 'Posting…' : 'Post Request'}
+              {submitting ? 'Saving…' : 'Save Changes'}
             </button>
-            <Link href="/" className="btn btn-ghost">Cancel</Link>
+            <Link href={`/jobs/${id}`} className="btn btn-ghost">Cancel</Link>
           </div>
         </form>
       </div>

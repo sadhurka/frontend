@@ -38,11 +38,8 @@ export default function HomePage() {
     }
   }, [category, status, search]);
 
-  useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
+  useEffect(() => { fetchJobs(); }, [fetchJobs]);
 
-  // Debounced search
   useEffect(() => {
     const t = setTimeout(() => setSearch(searchInput), 400);
     return () => clearTimeout(t);
@@ -51,14 +48,14 @@ export default function HomePage() {
   return (
     <main className="page">
       <div className="page-header">
-        <h1 className="page-title">Service Requests</h1>
+        <h1 className="page-title">Service requests</h1>
         <p className="page-sub">Browse open jobs from homeowners across the UK</p>
       </div>
 
       <div className="toolbar">
         <div className="search-wrap">
-          <svg className="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <svg className="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <input
             className="input search-input"
@@ -68,13 +65,11 @@ export default function HomePage() {
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
-
-        <span className="toolbar-label">Category:</span>
+        <span className="toolbar-label">Category</span>
         <select className="select" value={category} onChange={(e) => setCategory(e.target.value)}>
           {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
         </select>
-
-        <span className="toolbar-label">Status:</span>
+        <span className="toolbar-label">Status</span>
         <select className="select" value={status} onChange={(e) => setStatus(e.target.value)}>
           {STATUSES.map((s) => <option key={s}>{s}</option>)}
         </select>
@@ -87,15 +82,15 @@ export default function HomePage() {
           <div className="empty-icon">⚠️</div>
           <h3>Could not load jobs</h3>
           <p>{error}</p>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#888' }}>
-            Make sure the backend is running on the correct port.
+          <p style={{ marginTop: '0.5rem', fontSize: '12px', color: 'var(--ink-3)' }}>
+            Make sure the backend is running on port 5000.
           </p>
         </div>
       ) : jobs.length === 0 ? (
         <div className="empty">
           <div className="empty-icon">🔍</div>
           <h3>No jobs found</h3>
-          <p>Try adjusting your filters or <Link href="/jobs/new" style={{ color: 'var(--amber)' }}>post a new request</Link>.</p>
+          <p>Try adjusting your filters or <Link href="/jobs/new" style={{ color: 'var(--ink)', textDecoration: 'underline' }}>post a new request</Link>.</p>
         </div>
       ) : (
         <div className="cards">
@@ -109,9 +104,9 @@ export default function HomePage() {
               <div className="card-desc">{job.description}</div>
               <div className="card-footer">
                 <span className="card-location">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M12 21s-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-8 12-8 12z"/>
-                    <circle cx="12" cy="9" r="2.5"/>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M12 21s-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-8 12-8 12z" />
+                    <circle cx="12" cy="9" r="2.5" />
                   </svg>
                   {job.location || 'Location not specified'}
                 </span>

@@ -96,7 +96,7 @@ export default function JobDetailPage() {
       <div className="empty">
         <div className="empty-icon">🔎</div>
         <h3>Job not found</h3>
-        <p>It may have been deleted. <Link href="/" style={{ color: 'var(--amber)' }}>Back to listings →</Link></p>
+        <p>It may have been deleted. <Link href="/" className="text-link">Back to listings →</Link></p>
       </div>
     </main>
   );
@@ -118,15 +118,15 @@ export default function JobDetailPage() {
           <h1 className="detail-title">{job.title}</h1>
           <div className="detail-meta">
             {job.location && (
-              <span style={{ fontSize: '0.85rem', color: 'var(--ink-light)', display:'flex', alignItems:'center', gap:'0.3rem' }}>
+              <span className="detail-location-span">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M12 21s-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-8 12-8 12z"/>
-                  <circle cx="12" cy="9" r="2.5"/>
+                  <path d="M12 21s-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-8 12-8 12z" />
+                  <circle cx="12" cy="9" r="2.5" />
                 </svg>
                 {job.location}
               </span>
             )}
-            <span style={{ fontSize: '0.8rem', color: 'var(--ink-light)', opacity: 0.75 }}>
+            <span className="detail-date-span">
               Posted {formatDate(job.createdAt)}
             </span>
           </div>
@@ -149,7 +149,7 @@ export default function JobDetailPage() {
               <div className="detail-section">
                 <div className="detail-section-label">Contact Email</div>
                 <div className="detail-section-value">
-                  <a href={`mailto:${job.contactEmail}`} style={{ color: 'var(--amber)', textDecoration: 'none' }}>
+                  <a href={`mailto:${job.contactEmail}`} className="text-link">
                     {job.contactEmail}
                   </a>
                 </div>
@@ -159,8 +159,8 @@ export default function JobDetailPage() {
         </div>
 
         <div className="detail-actions">
-          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', marginRight: 'auto' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--ink-light)', whiteSpace: 'nowrap' }}>
+          <div className="status-update-wrap">
+            <label className="status-update-label">
               Update Status:
             </label>
             <select
@@ -180,9 +180,14 @@ export default function JobDetailPage() {
             </button>
           </div>
 
-          <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
-            {deleting ? 'Deleting…' : '🗑 Delete Job'}
-          </button>
+          <div className="action-buttons-wrap">
+            <Link href={`/jobs/${job._id}/edit`} className="btn btn-ghost">
+              Edit Service
+            </Link>
+            <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
+              {deleting ? 'Deleting…' : 'Delete Request'}
+            </button>
+          </div>
         </div>
       </div>
     </main>

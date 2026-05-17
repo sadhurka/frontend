@@ -28,18 +28,21 @@ export default function RootLayout({ children }) {
           <Link href="/" className="nav-brand">
             Global<span>TNA</span>
           </Link>
-          <Link href="/" className="nav-link">Browse Jobs</Link>
           
-          {isAdmin ? (
-            <>
-              <Link href="/jobs/new" className="nav-post">+ Post a Job</Link>
-              <button onClick={handleLogout} className="btn btn-ghost" style={{ padding: '0.4rem 1rem', color: '#fff', fontSize: '0.85rem', cursor: 'pointer' }}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link href="/admin" className="nav-link" style={{ marginLeft: 'auto' }}>Admin Login</Link>
-          )}
+          <div className="nav-menu">
+            <Link href="/" className="nav-link">Browse Services</Link>
+            
+            {isAdmin ? (
+              <>
+                <Link href="/jobs/new" className="nav-post">+ Post a Service</Link>
+                <button onClick={handleLogout} className="btn btn-ghost logout-btn">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/admin" className="nav-link admin-login">Admin Login</Link>
+            )}
+          </div>
         </nav>
         {children}
       </body>
